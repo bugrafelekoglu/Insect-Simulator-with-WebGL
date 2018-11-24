@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      precision mediump float;
+      
+      attribute vec4 vPosition;
+      attribute vec4 vColor;
+
+      varying vec4 fColor;
+      varying lowp vec4 vPos;
+
+      uniform mat4 modelViewMatrix;
+      uniform mat4 projectionMatrix;
+      uniform float timet;
+
+      void main(){
+        gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+        vPos = gl_Position;
+        fColor = vColor;
+      }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      varying lowp vec4 vPos;
+      varying vec4 fColor;
+      uniform float timet;
+      
+
+      void main() {
+        vec4 fColor = fColor / 255.0;
+        gl_FragColor = vec4(fColor.r, fColor.g, fColor.b, fColor.a);
+      }
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/initShaders.js"></script>
+    <script type="text/javascript" src="../common/MV.js"></script>
+    <script type="text/javascript" src="insect.js"></script>
+  </head>
+  <body>
+    <canvas id="gl-canvas" width="600" height="600" name="canvas">
+    Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+    
+    <div id="UIButtons" class="UIBoxBlue">
+      <div id="UIButtonsHeader">Buttons</div>
+
+      <div class="box">
+        <div id="Text">
+          File name:
+        </div>
+        <input id="Textbox" type="textarea" size="15">
+        <button id="Save" type="button" class="button">Save</button>
+      </div>
+
+      <div class="box">
+        <label id="FileButton" for="File" class="button">
+          <div id="FileText">Choose a File</div>
+        </label>
+        <input id="File" type="file" class="inputfile">
+        <button id="Load" type="button" class="button">Load</button>
+      </div>
+
+      <div class="box">
+        <button id="FinishCloud" type="button" class="button">Finish Cloud</button>
+        <button id="Generate" type="button" class="button">Generate</button>
+      </div>
+    </div>
+
+    <div id="UISliders" class="UIBoxRed">
+      <div id="UISlidersHeader">Sliders</div>
+      <div class="break5"></div>
+
+      <div class="partsBox">
+        <div class="titledDiv">
+          <h1><span>Torso</span></h1>
+          <div class="box">
+            <div class="textDiv">
+              Head:
+            </div>
+            <div class="numberDiv">
+              -180
+              <input id="sliderHead" type="range" min="1" max="5" step="1" value="3" />
+              180
+            </div>
+          </div>
+          <div class="box">
+            <div class="textDiv">
+              Torso:
+            </div>
+            <div class="numberDiv">
+              -180
+              <input id="sliderTorso" type="range" min="1" max="5" step="1" value="3" />
+              180
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="partsBox">
+        <div class="titledBox">
+          <h1><span>Left Legs</span></h1>
+          <div class="break15"></div>
+
+          <div class="titledDiv">
+            <h1><span>Front</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderLFU" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderLFL" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="titledDiv">
+            <h1><span>Center</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderLCU" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderLCL" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="titledDiv">
+            <h1><span>Back</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderLBU" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderLBL" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="titledBox">
+          <h1><span>Right Legs</span></h1>
+          <div class="break15"></div>
+
+          <div class="titledDiv">
+            <h1><span>Front</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderRFU" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderRFL" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="titledDiv">
+            <h1><span>Center</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderRCU" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderRCL" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+          </div>
+          <div class="break5"></div>
+          <div class="titledDiv">
+            <h1><span>Back</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Upper:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderRBU" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+            <div class="box">
+              <div class="textDiv">
+                Lower:
+              </div>
+              <div class="numberDiv">
+                -180
+                <input id="sliderRBL" type="range" min="1" max="5" step="1" value="3" />
+                180
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="partsBox">
+          <div class="titledDiv">
+            <h1><span>Translate</span></h1>
+            <div class="box">
+              <div class="textDiv">
+                Translate X:
+              </div>
+              <div class="numberDiv">
+                -8
+                <input id="sliderX" type="range" min="1" max="5" step="1" value="3" />
+                8
+              </div>
+            </div>
+            <div class="break5"></div>
+            <div class="box">
+              <div class="textDiv">
+                Translate Y:
+              </div>
+              <div class="numberDiv">
+                -8
+                <input id="sliderY" type="range" min="1" max="5" step="1" value="3" />
+                8
+              </div>
+            </div>
+            <div class="break5"></div>
+            <div class="box">
+              <div class="textDiv">
+                Translate Z:
+              </div>
+              <div class="numberDiv">
+                8
+                <input id="sliderZ" type="range" min="1" max="5" step="1" value="3" />
+                8
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

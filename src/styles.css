@@ -1,0 +1,248 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 500;
+}
+
+*:focus {
+    outline: none;
+}
+
+.UIBoxBlue {
+  border-radius: 25px;
+  background-color: #5fb7ff;
+  box-shadow: -8px 8px 8px #2121214d;
+  border:none;
+  display: flex;
+  justify-content: space-between;
+  align-items: space-between;
+  flex-direction: column;
+}
+
+.UIBoxRed {
+  border-radius: 25px;
+  background-color: #da4444;
+  box-shadow: -8px 8px 8px #8360604d;
+  display: flex;
+  border:none;
+  justify-content: space-between;
+  align-items: space-between;
+  flex-direction: column;
+}
+
+.box {
+  color: white;
+  display: flex;
+  height: 32px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.partsBox {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.numberDiv {
+  font-size: 16px;
+}
+
+.textDiv {
+  font-size: 16px;
+}
+
+.button {
+  color: #2196f3;
+  height: 30px;
+  width: 100px;
+  background-color: white;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #0b6ab9;
+  color: white;
+}
+
+.button:active  {
+  background-color: #06406f;;
+  color: white;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.titledDiv {
+  border-top: 2px solid #fff;
+  width: 330px;
+  height: auto;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.titledDiv h1 {
+  color: #fff;
+  text-align: center;
+  margin-top: -15px;
+  line-height: 20px;
+  margin-bottom: -0.1px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.titledDiv h1 span {
+  background-color: #da4444;
+  padding: 5px;
+  border-radius: 15px;
+}
+
+.titledBox {
+  border-top: 2px solid #fff;
+  width: 340px;
+  height: auto;
+  padding: 5px 5px 5px 5px;
+  margin-top: 5px;
+}
+
+.titledBox h1 {
+  color: #fff;
+  text-align: center;
+  margin-top: -15px;
+  line-height: 20px;
+  margin-bottom: -0.1px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.titledBox h1 span {
+  background-color: #da4444;
+  padding: 5px;
+  border-radius: 15px;
+}
+
+.break15 {
+  height: 15px;
+}
+
+.break5 {
+  height: 5px;
+}
+
+#UIButtons {
+  width: 400px;
+  height: 200px;
+  padding: 15px 20px;
+  position: absolute;
+  text-align: center;
+  /*top: 505px;*/
+  /*left: 675px;*/
+}
+
+#UIButtons:hover {
+  z-index: 1;
+}
+
+#UIButtonsHeader {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 25px;
+  cursor: move;
+  background-color: #fff;
+  color: #2196f3;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+#UISliders {
+  width: 750px;
+  height: 600px;
+  padding: 15px 15px 5px;
+  position: absolute;
+  text-align: center;
+  top: 8px;
+  left: 660px;
+}
+
+#UISlidersHeader {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 25px;
+  cursor: move;
+  background-color: #ffffff;
+  color: #da4444;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+#Textbox {
+  border-radius: 15px;
+  height: 28px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: none;
+  font-size: 16px;
+}
+
+#FileButton {
+  vertical-align: middle;
+  width: 240px;
+  text-align: center;
+}
+
+#FileText {
+  padding-top: 5px;
+  font-size: 18px;
+  text-align:center;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+#Text {
+  font-size: 18px;
+  text-align:center;
+}
+
+#Save {
+  width: 70px;
+}
+
+#Load {
+  width: 70px;
+}
+
+#Generate {
+  background-color: white;
+  color: #f03f3f;
+}
+
+#Generate:hover {
+  background-color: #f03f3f;
+  color: white;
+}
+
+#Generate:active  {
+  background-color: #b62d2d;
+  color: white;
+}
+
+#FinishCloud {
+  width: 150px;
+}
+
+canvas {
+  border: 22px #b5651d;
+  border-style: groove;
+}
