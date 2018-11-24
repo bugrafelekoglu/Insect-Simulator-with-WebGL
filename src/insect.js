@@ -19,7 +19,7 @@ var modelViewMatrixLoc;
 
 // Constant color values
 const SKY_COLOR = vec4(0, 176, 240, 255);
-const GROUND_COLOR = vec4(23, 197, 40, 255);
+const GROUND_COLOR = vec4(23, 198, 40, 255);
 const SPIDER_COLOR = vec4(60, 60, 60, 255);
 
 window.onload = function init() {
