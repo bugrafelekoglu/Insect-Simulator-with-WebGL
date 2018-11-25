@@ -167,7 +167,7 @@
 
 #UISliders {
   width: 750px;
-  height: 600px;
+  height: 640px;
   padding: 15px 15px 5px;
   position: absolute;
   text-align: center;
@@ -223,17 +223,17 @@
   width: 70px;
 }
 
-#Generate {
+#Animation {
   background-color: white;
   color: #f03f3f;
 }
 
-#Generate:hover {
+#Animation:hover {
   background-color: #f03f3f;
   color: white;
 }
 
-#Generate:active  {
+#Animation:active  {
   background-color: #b62d2d;
   color: white;
 }

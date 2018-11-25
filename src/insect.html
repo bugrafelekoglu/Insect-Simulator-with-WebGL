@@ -23,14 +23,16 @@
 
     <script id="fragment-shader" type="x-shader/x-fragment">
       precision mediump float;
+      
       varying lowp vec4 vPos;
       varying vec4 fColor;
+
       uniform float timet;
       
-
       void main() {
         vec4 fColor = fColor / 255.0;
-        gl_FragColor = vec4(fColor.r, fColor.g, fColor.b, fColor.a);
+        float lightness = 3250.0/(vPos.z*vPos.z*vPos.z*vPos.z);
+        gl_FragColor = vec4(lightness, lightness, lightness, 1.0);
       }
     </script>
 
@@ -66,7 +68,7 @@
 
       <div class="box">
         <button id="FinishCloud" type="button" class="button">Finish Cloud</button>
-        <button id="Generate" type="button" class="button">Generate</button>
+        <button id="Animation" type="button" class="button">Animation</button>
       </div>
     </div>
 
@@ -76,24 +78,34 @@
 
       <div class="partsBox">
         <div class="titledDiv">
-          <h1><span>Torso</span></h1>
+          <h1><span>Body</span></h1>
           <div class="box">
             <div class="textDiv">
               Head:
             </div>
             <div class="numberDiv">
               -180
-              <input id="sliderHead" type="range" min="1" max="5" step="1" value="3" />
+              <input id="sliderHead" type="range" min="-180" max="180" step="10" value="0" />
               180
             </div>
           </div>
           <div class="box">
             <div class="textDiv">
-              Torso:
+              Body:
             </div>
             <div class="numberDiv">
               -180
-              <input id="sliderTorso" type="range" min="1" max="5" step="1" value="3" />
+              <input id="sliderBody" type="range" min="-180" max="180" step="10" value="0" />
+              180
+            </div>
+          </div>
+          <div class="box">
+            <div class="textDiv">
+              Rear:
+            </div>
+            <div class="numberDiv">
+              -180
+              <input id="sliderRear" type="range" min="-180" max="180" step="10" value="0" />
               180
             </div>
           </div>
@@ -113,7 +125,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderLFU" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderLFU" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -123,7 +135,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderLFL" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderLFL" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -137,7 +149,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderLCU" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderLCU" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -147,7 +159,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderLCL" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderLCL" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -161,7 +173,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderLBU" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderLBU" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -171,7 +183,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderLBL" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderLBL" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -190,7 +202,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderRFU" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderRFU" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -200,7 +212,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderRFL" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderRFL" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -214,7 +226,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderRCU" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderRCU" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -224,7 +236,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderRCL" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderRCL" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -238,7 +250,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderRBU" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderRBU" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -248,7 +260,7 @@
               </div>
               <div class="numberDiv">
                 -180
-                <input id="sliderRBL" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderRBL" type="range" min="-180" max="180" step="10" value="0" />
                 180
               </div>
             </div>
@@ -264,7 +276,7 @@
               </div>
               <div class="numberDiv">
                 -8
-                <input id="sliderX" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderX" type="range" min="-8" max="8" step="0.1" value="0" />
                 8
               </div>
             </div>
@@ -275,7 +287,7 @@
               </div>
               <div class="numberDiv">
                 -8
-                <input id="sliderY" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderY" type="range" min="-8" max="8" step="0.1" value="0" />
                 8
               </div>
             </div>
@@ -286,7 +298,7 @@
               </div>
               <div class="numberDiv">
                 -8
-                <input id="sliderZ" type="range" min="1" max="5" step="1" value="3" />
+                <input id="sliderZ" type="range" min="-8" max="8" step="0.1" value="0" />
                 8
               </div>
             </div>
