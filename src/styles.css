@@ -146,8 +146,8 @@
   padding: 15px 20px;
   position: absolute;
   text-align: center;
-  /*top: 505px;*/
-  /*left: 675px;*/
+  top: 8px;
+  left: 660px;
 }
 
 #UIButtons:hover {
@@ -172,7 +172,7 @@
   position: absolute;
   text-align: center;
   top: 8px;
-  left: 660px;
+  left: 1110px;
 }
 
 #UISlidersHeader {
@@ -223,7 +223,16 @@
   width: 70px;
 }
 
+#AddKeyframe {
+  width: 150px;
+}
+
+#Play {
+  width: 50px;
+}
+
 #Animation {
+  width: 150px;
   background-color: white;
   color: #f03f3f;
 }
@@ -236,10 +245,6 @@
 #Animation:active  {
   background-color: #b62d2d;
   color: white;
-}
-
-#FinishCloud {
-  width: 150px;
 }
 
 canvas {

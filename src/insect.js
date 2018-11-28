@@ -66,20 +66,17 @@ var theta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var thetaList = [];
 var transList = [];
+var loadedThetaList = [];
+var loadedTransList = [];
 
 var timet;
 var timetLoc;
 var interpolationFrame = 0;
 
-function scale4(a, b, c) {
-  var result = mat4();
-  result[0][0] = a;
-  result[1][1] = b;
-  result[2][2] = c;
-  return result;
-}
-
-function fillLists() {
+/***************************************************
+  Prepared animation frames
+****************************************************/
+function animationFrames() {
   thetaList = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -87,12 +84,15 @@ function fillLists() {
   ];
 
   transList = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0]
+    [0, 2, 0],
+    [1, 0, 0],
+    [0, 4, 0]
   ]
 }
 
+/***************************************************
+  Init function of window
+****************************************************/
 window.onload = function init() {
   canvas = document.getElementById("gl-canvas");
   gl = WebGLUtils.setupWebGL(canvas);
@@ -108,7 +108,7 @@ window.onload = function init() {
 
   // Configure WebGL
   gl.viewport(0, 0, canvas.width, canvas.width);
-  gl.clearColor(0, 0.69, 0.94, 1.0);
+  gl.clearColor(0.24, 0.61, 0.93, 1.0);
   gl.enable(gl.DEPTH_TEST);
 
   // Initiating variables
@@ -130,6 +130,8 @@ window.onload = function init() {
   projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
   timetLoc = gl.getUniformLocation(program, "timet");
 
+  clickAddKeyframeButton();
+  clickPlayButton();
   clickAnimationButton();
   clickSaveButton();
   clickLoadButton();
@@ -138,7 +140,7 @@ window.onload = function init() {
   cube();
 
   for (i = 0; i < numNodes; i++) 
-    createNodes(i);
+    updateNodes(i);
 
   drawGround();
   render();
@@ -150,10 +152,9 @@ window.onload = function init() {
 ****************************************************/
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
   drawGround();
 
-  if (isRunning) {
+  if (isRunning) {  // Animation
     if (timet < 1) {
       timet += 0.02;  // Speed of animation
     } else {
@@ -166,23 +167,23 @@ function render() {
 
     for (var i = 0; i < theta.length; i++) {
       curTheta[i] = thetaList[curFrame][i] * (1 - timet) + thetaList[nextFrame][i] * timet;
-      createNodes(i);
+      updateNodes(i);
     }
 
     curTranslateX = transList[curFrame][0] * (1 - timet) + transList[nextFrame][0] * timet;
     curTranslateY = transList[curFrame][1] * (1 - timet) + transList[nextFrame][1] * timet;
     curTranslateZ = transList[curFrame][2] * (1 - timet) + transList[nextFrame][2] * timet;
-    createNodes(bodyId);
+    updateNodes(bodyId);
   } 
-  else {
+  else {  // Static picture
     for (var i = 0; i < theta.length; i++) {
       curTheta[i] = theta[i];
-      createNodes(i);
+      updateNodes(i);
     }
     curTranslateX = translateX;
     curTranslateY = translateY;
     curTranslateZ = translateZ;
-    createNodes(bodyId);
+    updateNodes(bodyId);
   }
 
   gl.uniform1f(timetLoc, timet);
@@ -190,6 +191,13 @@ function render() {
   requestAnimFrame(render);
 }
 
+/***************************************************
+  Creates new nodes with different parameters:
+    -transform matrix
+    -render function
+    -sibling node
+    -child node
+****************************************************/
 function createNode(transform, render, sibling, child) {
   var node = {
     transform: transform,
@@ -200,7 +208,11 @@ function createNode(transform, render, sibling, child) {
   return node;
 }
 
-function createNodes(id) {
+/***************************************************
+  Node updates according to user chosen 
+    translation and rotation parameters
+****************************************************/
+function updateNodes(id) {
   var m = mat4();
 
   switch (id) {
@@ -380,6 +392,10 @@ function traverse(id) {
     traverse(figure[id].sibling);
 }
 
+/***************************************************
+  Render functions of each nodes
+****************************************************/
+
 function body() {
   instanceMatrix = mult(modelViewMatrix, scale4(BODY_WIDTH, BODY_HEIGHT, BODY_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
@@ -536,7 +552,7 @@ function rightBackLowerLeg() {
   Draws body parts of figure (with using cubes)  
 ****************************************************/
 function drawBodyPart() {
-  processBuffers(vertices);
+  processBuffers(vec4(75, 65, 55, 255), vertices, 4);
   for(var i = 0; i < 6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4 * i, 4);
 }
 
@@ -545,24 +561,28 @@ function drawBodyPart() {
 ****************************************************/
 function drawGround() {
   var vertices = [
-    vec3(-8, -1, -8),
-    vec3(-8, -1, 8),
-    vec3(8, -1, 8),
-    vec3(8, -1, -8)
-  ];
-
-  var colors = [
-    vec4(46, 168, 34, 255),
-    vec4(46, 168, 34, 255),
-    vec4(46, 168, 34, 255),
-    vec4(46, 168, 34, 255)
+    vec3(-64, -0.8, -32),
+    vec3(-64, -0.8, 32),
+    vec3(64, -0.8, 32),
+    vec3(64, -0.8, -32)
   ];
 
   instanceMatrix = mult(modelViewMatrix, scale4(BODY_WIDTH, BODY_HEIGHT, BODY_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
 
-  processBuffers3(vertices);
+  processBuffers(vec4(46, 168, 34, 255), vertices, 3);
   gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+}
+
+/***************************************************
+  Custom scale function for mat4 type of matrices
+****************************************************/
+function scale4(a, b, c) {
+  var result = mat4();
+  result[0][0] = a;
+  result[1][1] = b;
+  result[2][2] = c;
+  return result;
 }
 
 /***************************************************
@@ -571,105 +591,139 @@ function drawGround() {
 function sliders() {
   document.getElementById("sliderBody").oninput = function() {
     theta[bodyId] = event.srcElement.value;    
-    createNodes(bodyId);
+    updateNodes(bodyId);
   };
 
   document.getElementById("sliderHead").oninput = function() {
     theta[headId] = event.srcElement.value;
-    createNodes(headId);
+    updateNodes(headId);
   };
 
   document.getElementById("sliderRear").oninput = function() {
     theta[rearId] = event.srcElement.value;
-    createNodes(rearId);
+    updateNodes(rearId);
   };
 
   document.getElementById("sliderLFU").oninput = function() {
     theta[leftFrontUpperLegId] = event.srcElement.value;
-    createNodes(leftFrontUpperLegId);
+    updateNodes(leftFrontUpperLegId);
   };
 
   document.getElementById("sliderLFL").oninput = function() {
     theta[leftFrontLowerLegId] =  event.srcElement.value;
-    createNodes(leftFrontLowerLegId);
+    updateNodes(leftFrontLowerLegId);
   };
 
   document.getElementById("sliderLCU").oninput = function() {
     theta[leftCenterUpperLegId] = event.srcElement.value;
-    createNodes(leftCenterUpperLegId);
+    updateNodes(leftCenterUpperLegId);
   };
 
   document.getElementById("sliderLCL").oninput = function() {
     theta[leftCenterLowerLegId] = event.srcElement.value;
-    createNodes(leftCenterLowerLegId);
+    updateNodes(leftCenterLowerLegId);
   };
 
   document.getElementById("sliderLBU").oninput = function() {
     theta[leftBackUpperLegId] = event.srcElement.value;
-    createNodes(leftBackUpperLegId);
+    updateNodes(leftBackUpperLegId);
   };
 
   document.getElementById("sliderLBL").oninput = function() {
     theta[leftBackLowerLegId] = event.srcElement.value;
-    createNodes(leftBackLowerLegId);
+    updateNodes(leftBackLowerLegId);
   };
 
   document.getElementById("sliderRFU").oninput = function() {
     theta[rightFrontUpperLegId] = event.srcElement.value;
-    createNodes(rightFrontUpperLegId);
+    updateNodes(rightFrontUpperLegId);
   };
 
   document.getElementById("sliderRFL").oninput = function() {
     theta[rightFrontLowerLegId] =  event.srcElement.value;
-    createNodes(rightFrontLowerLegId);
+    updateNodes(rightFrontLowerLegId);
   };
 
   document.getElementById("sliderRCU").oninput = function() {
     theta[rightCenterUpperLegId] = event.srcElement.value;
-    createNodes(rightCenterUpperLegId);
+    updateNodes(rightCenterUpperLegId);
   };
 
   document.getElementById("sliderRCL").oninput = function() {
     theta[rightCenterLowerLegId] = event.srcElement.value;
-    createNodes(rightCenterLowerLegId);
+    updateNodes(rightCenterLowerLegId);
   };
 
   document.getElementById("sliderRBU").oninput = function() {
     theta[rightBackUpperLegId] = event.srcElement.value;
-    createNodes(rightBackUpperLegId);
+    updateNodes(rightBackUpperLegId);
   };
 
   document.getElementById("sliderRBL").oninput = function() {
     theta[rightBackLowerLegId] = event.srcElement.value;
-    createNodes(rightBackLowerLegId);
+    updateNodes(rightBackLowerLegId);
   };
 
   document.getElementById("sliderX").oninput = function() {
     translateX = event.srcElement.value;
-    createNodes(bodyId);
+    updateNodes(bodyId);
   };
 
   document.getElementById("sliderY").oninput = function() {
     translateY = event.srcElement.value;
-    createNodes(bodyId);
+    updateNodes(bodyId);
   };
 
   document.getElementById("sliderZ").oninput = function() {
     translateZ = event.srcElement.value;
-    createNodes(bodyId);
+    updateNodes(bodyId);
   };
+}
+
+/***************************************************
+  Add Keyframe button listener
+****************************************************/
+function clickAddKeyframeButton() {
+  var button = document.getElementById("AddKeyframe");
+
+  // Listener for Load button
+  button.addEventListener("click", function () {
+    thetaList.push(theta.slice());
+    transList.push([translateX, translateY, translateZ]);
+    for(i = 0; i < numNodes; i++) 
+      initNodes(i);
+  });
+}
+
+/***************************************************
+  Play button listener
+****************************************************/
+function clickPlayButton() {
+  var button = document.getElementById("Play");
+
+  // Listener for Load button
+  button.addEventListener("click", function () {
+    if(thetaList.length == 0 || transList.length == 0) {
+      alert("Please add a keyframe before playing frames.");
+    } else {
+      isRunning = !isRunning;
+      interpolationFrame = 0;
+      timet = 0;
+    }
+  });
 }
 
 /***************************************************
   Animation button listener
 ****************************************************/
 function clickAnimationButton() {
-  var generate = document.getElementById("Animation");
+  var button = document.getElementById("Animation");
 
   // Listener for Animation button
-  generate.addEventListener("click", function () {
-    fillLists();
+  button.addEventListener("click", function () {
+    animationFrames();
     isRunning = !isRunning;
+    interpolationFrame = 0;
     timet = 0;
   });
 }
@@ -678,14 +732,14 @@ function clickAnimationButton() {
   Save button listener
 ****************************************************/
 function clickSaveButton() {
-  var save = document.getElementById("Save");
+  var button = document.getElementById("Save");
   var textbox = document.getElementById('Textbox');
 
   // Listener for Save button
-  save.addEventListener("click", function (event) {
+  button.addEventListener("click", function (event) {
     var link = document.createElement('a');
     link.setAttribute('download', textbox.value);
-    var data = [n, houseColors, houseFloors, clouds];
+    var data = [thetaList, transList];
     link.href = makeTextFile(data);
     document.body.appendChild(link);
 
@@ -702,17 +756,16 @@ function clickSaveButton() {
   Load button listener
 ****************************************************/
 function clickLoadButton() {
-  var load = document.getElementById("Load");
+  var button = document.getElementById("Load");
 
   // Listener for Load button
-  load.addEventListener("click", function (event) {
+  button.addEventListener("click", function (event) {
     if (!isFileExist) {
       alert("You have either selected the wrong file or did not select a file");
     } else {
-
+      thetaList = loadedThetaList;
+      transList = loadedTransList;
     }
-
-    render();
   });
 }
 
@@ -729,10 +782,8 @@ function chooseFile() {
       var data = this.result;
       var json = JSON.parse(data);
 
-      loadedN = json[0]
-      loadedHouseColors = json[1];
-      loadedHouseFloors = json[2];
-      loadedClouds = json[3];
+      loadedThetaList = json[0]
+      loadedTransList = json[1];
 
       isFileExist = true;
     };
@@ -779,7 +830,7 @@ var cubeVertices = [
 /***************************************************
   Vertex buffers without colors
 ****************************************************/
-function processBuffers(vertices) {
+function processBuffers(vertices, vSize) {
   // Load the vertex data into the GPU
   var vBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
@@ -787,26 +838,20 @@ function processBuffers(vertices) {
 
   // Associate out shader variables with our data buffer
   var vPosition = gl.getAttribLocation(program, "vPosition");
-  gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(vPosition);
-}
-
-function processBuffers3(vertices) {
-  // Load the vertex data into the GPU
-  var vBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
-
-  // Associate out shader variables with our data buffer
-  var vPosition = gl.getAttribLocation(program, "vPosition");
-  gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(vPosition, vSize, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vPosition);
 }
 
 /***************************************************
   Vertex buffers with colors (Overload)
 ****************************************************/
-function processBufferscolor(colors, vertices) {
+function processBuffers(color, vertices, vSize) {
+  var colors = [];
+  
+  // Create color array as much as vertices length
+  for(var i = 0; i < vertices.length; i++)
+    colors.push(color);
+
   // Load the color data into the GPU
   var cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
@@ -824,9 +869,10 @@ function processBufferscolor(colors, vertices) {
 
   // Associate out shader variables with our data buffer
   var vPosition = gl.getAttribLocation(program, "vPosition");
-  gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(vPosition, vSize, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vPosition);
 }
+
 
 /************************************************************
   File creation (Modified)
