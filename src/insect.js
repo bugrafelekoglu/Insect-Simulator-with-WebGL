@@ -151,6 +151,8 @@ window.onload = function init() {
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+  drawGround();
+
   if (isRunning) {
     if (timet < 1) {
       timet += 0.02;  // Speed of animation
@@ -543,10 +545,10 @@ function drawBodyPart() {
 ****************************************************/
 function drawGround() {
   var vertices = [
-    vec3(-8, 0, -8),
-    vec3(-8, 0, 8),
-    vec3(8, 0, -8),
-    vec3(8, 0, 8)
+    vec3(-8, -1, -8),
+    vec3(-8, -1, 8),
+    vec3(8, -1, 8),
+    vec3(8, -1, -8)
   ];
 
   var colors = [
@@ -555,6 +557,9 @@ function drawGround() {
     vec4(46, 168, 34, 255),
     vec4(46, 168, 34, 255)
   ];
+
+  instanceMatrix = mult(modelViewMatrix, scale4(BODY_WIDTH, BODY_HEIGHT, BODY_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
 
   processBuffers3(vertices);
   gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
