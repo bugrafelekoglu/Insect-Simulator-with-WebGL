@@ -10,6 +10,7 @@
 var gl;
 var program;
 var canvas;
+var vBuffer;
 
 // Global variables
 var isFileExist = false;
@@ -29,8 +30,6 @@ var vertices = [
   vec4(0.5, -0.5, -0.5, 1.0)
 ];
 
-var cylinderVertices = [];
-
 var bodyId = 0;
 var headId = 1;
 var rearId = 2;
@@ -49,14 +48,14 @@ var rightBackLowerLegId = 14;
 
 var numNodes = 15; 
 
-var bodyHeight = 1.0;
-var bodyWidth = 1.0;
-var headHeight = 2.0;
-var headWidth = 2.0;
-var rearHeight = 3.0;
-var rearWidth = 3.0;
+var bodyHeight = 1.6;
+var bodyWidth = 1.2;
+var headHeight = 1.6;
+var headWidth = 1.8;
+var rearHeight = 2.2;
+var rearWidth = 2.2;
 var legHeight = 3.0;
-var legWidth = 0.5;
+var legWidth = 0.3;
 
 var curTranslateX;
 var curTranslateY;
@@ -76,7 +75,6 @@ var figure = [];
 
 for (var i = 0; i < numNodes; i++) figure[i] = createNode(null, null, null, null);
 
-var vBuffer;
 var pointsArray = [];
 
 function scale4(a, b, c) {
@@ -133,103 +131,128 @@ function initNodes(Id) {
     case bodyId:
       m = translate(-curTranslateX, curTranslateY, curTranslateZ);
       m = mult(m, rotate(curTheta[bodyId], 0, 1, 0));
-     // m = mult(m, rotate(90, 1, 0, 0));
+      m = mult(m, rotate(-90, 0, 0, 1));
       figure[bodyId] = createNode(m, body, null, headId);
       break;
 
     case headId:
-      m = translate(0.0, 0.0, 0.0);
-      m = mult(m, rotate(curTheta[headId], 1, 0, 0));
+      m = translate(0.0, 0.8 * bodyHeight, 0.0);
+      m = mult(m, rotate(curTheta[headId], 0, 0, 1));
+      m = mult(m, translate(0.0, -0.8 * bodyHeight, 0.0));
       figure[headId] = createNode(m, head, rearId, null);
       break;
 
     case rearId:
-      m = translate(0.0, 0.0, 0.0);
-      m = mult(m, rotate(curTheta[rearId], 1, 0, 0));
+      m = translate(-0.2, -bodyHeight, 0.0);
+      m = mult(m, rotate(curTheta[rearId], 0, 0, 1));
+      m = mult(m, translate(0.2, bodyHeight, 0.0));
       figure[rearId] = createNode(m, rear, leftFrontUpperLegId, null);
       break;
 
     case leftFrontUpperLegId:
-      m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
-      m = mult(m, rotate(curTheta[leftFrontUpperLegId], 1, 0, 0));
-      m = mult(m, rotate(15, 0, 0, 1));
+      m = translate(0.0, 0.0, 0.0);
+      m = mult(m, rotate(curTheta[leftFrontUpperLegId], 0, 0, 1));
       figure[leftFrontUpperLegId] = createNode(m, leftFrontUpperLeg, leftCenterUpperLegId, leftFrontLowerLegId);
       break;
 
     case leftCenterUpperLegId:
-      m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
-      m = mult(m, rotate(curTheta[leftCenterUpperLegId], 1, 0, 0));
-      m = mult(m, rotate(15, 0, 0, 1));
+      //m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
+      //m = mult(m, rotate(curTheta[leftCenterUpperLegId], 1, 0, 0));
+      //m = mult(m, rotate(15, 0, 0, 1));
       figure[leftCenterUpperLegId] = createNode(m, leftCenterUpperLeg, leftBackUpperLegId, leftCenterLowerLegId);
       break;
 
     case leftBackUpperLegId:
-      m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
-      m = mult(m, rotate(curTheta[leftBackUpperLegId], 1, 0, 0));
-      m = mult(m, rotate(15, 0, 0, 1));
+      //m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
+      //m = mult(m, rotate(curTheta[leftBackUpperLegId], 1, 0, 0));
+      //m = mult(m, rotate(15, 0, 0, 1));
       figure[leftBackUpperLegId] = createNode(m, leftBackUpperLeg, rightFrontUpperLegId, leftBackLowerLegId);
       break;
 
     case rightFrontUpperLegId:
-      m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
-      m = mult(m, rotate(curTheta[rightFrontUpperLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+      //m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
+      //m = mult(m, rotate(curTheta[rightFrontUpperLegId], 1, 0, 0));
+      //m = mult(m, rotate(-15, 0, 0, 1));
       figure[rightFrontUpperLegId] = createNode(m, rightFrontUpperLeg, rightCenterUpperLegId, rightFrontLowerLegId);
       break;
 
     case rightCenterUpperLegId:
-      m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
-      m = mult(m, rotate(curTheta[rightCenterUpperLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+      //m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
+      //m = mult(m, rotate(curTheta[rightCenterUpperLegId], 1, 0, 0));
+      //m = mult(m, rotate(-15, 0, 0, 1));
       figure[rightCenterUpperLegId] = createNode(m, rightCenterUpperLeg, rightBackUpperLegId, rightCenterLowerLegId);
       break;
 
     case rightBackUpperLegId:
-      m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
-      m = mult(m, rotate(curTheta[rightBackUpperLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+      //m = translate(-(bodyWidth + legWidth) / 2, rearHeight, 0.0);
+      //m = mult(m, rotate(curTheta[rightBackUpperLegId], 1, 0, 0));
+      //m = mult(m, rotate(-15, 0, 0, 1));
       figure[rightBackUpperLegId] = createNode(m, rightBackUpperLeg, null, rightBackLowerLegId);
       break;
 
     case leftFrontLowerLegId:
-      m = translate(0.0, legHeight, 0.0);
-      m = mult(m, rotate(curTheta[leftFrontLowerLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+      //m = translate(0.0, legHeight, 0.0);
+      //m = mult(m, rotate(curTheta[leftFrontLowerLegId], 1, 0, 0));
+      //m = mult(m, rotate(-15, 0, 0, 1));
       figure[leftFrontLowerLegId] = createNode(m, leftFrontLowerLeg, null, null);
       break;
 
     case leftCenterLowerLegId:
-      m = translate(0.0, legHeight, 0.0);
-      m = mult(m, rotate(curTheta[leftCenterLowerLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+      //m = translate(0.0, legHeight, 0.0);
+      //m = mult(m, rotate(curTheta[leftCenterLowerLegId], 1, 0, 0));
+      //m = mult(m, rotate(-15, 0, 0, 1));
       figure[leftCenterLowerLegId] = createNode(m, leftCenterLowerLeg, null, null);
       break;
 
     case leftBackLowerLegId:
-      m = translate(0.0, legHeight, 0.0);
-      m = mult(m, rotate(curTheta[leftBackLowerLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+      //m = translate(0.0, legHeight, 0.0);
+     // m = mult(m, rotate(curTheta[leftBackLowerLegId], 1, 0, 0));
+      //m = mult(m, rotate(-15, 0, 0, 1));
       figure[leftBackLowerLegId] = createNode(m, leftBackLowerLeg, null, null);
       break;
 
     case rightFrontLowerLegId:
-      m = translate(0.0, legHeight, 0.0);
-      m = mult(m, rotate(curTheta[rightFrontLowerLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+      //m = translate(0.0, legHeight, 0.0);
+      //m = mult(m, rotate(curTheta[rightFrontLowerLegId], 1, 0, 0));
+      //m = mult(m, rotate(-15, 0, 0, 1));
       figure[rightFrontLowerLegId] = createNode(m, rightFrontLowerLeg, null, null);
       break;
 
     case rightCenterLowerLegId:
-      m = translate(0.0, legHeight, 0.0);
-      m = mult(m, rotate(curTheta[rightCenterLowerLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+      //m = translate(0.0, legHeight, 0.0);
+      //m = mult(m, rotate(curTheta[rightCenterLowerLegId], 1, 0, 0));
+     // m = mult(m, rotate(-15, 0, 0, 1));
       figure[rightCenterLowerLegId] = createNode(m, rightCenterLowerLeg, null, null);
       break;
 
     case rightBackLowerLegId:
-      m = translate(0.0, legHeight, 0.0);
-      m = mult(m, rotate(curTheta[rightBackLowerLegId], 1, 0, 0));
-      m = mult(m, rotate(-15, 0, 0, 1));
+
+      m = translate(-0.55, -2.2, 4.2);
+      m = mult(m, rotate(-60, 1, 0, 0));
+      m = mult(m, translate(0.0, legHeight/2, 0.0));
+      m = mult(m, rotate(30, 0, 0, 1));
+      m = mult(m, translate(0.0, -legHeight/2, 0.0));
+      m = mult(m, rotate(curTheta[rightBackLowerLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, legHeight/2, 0.0));
+      m = mult(m, rotate(-30, 0, 0, 1));
+      m = mult(m, translate(0.0, -legHeight/2, 0.0));
+      m = mult(m, rotate(60, 1, 0, 0));
+      m = mult(m, translate(0.55, 2.2, -4.2));
+
+      /*
+      m = translate(0.55, 2.2, -4.2);
+      m = mult(m, rotate(60, 1, 0, 0));
+      m = mult(m, translate(0.0, -legHeight/2, 0.0));
+      m = mult(m, rotate(-30, 0, 0, 1));
+      m = mult(m, translate(0.0, legHeight/2, 0.0));
+      m = mult(m, rotate(curTheta[rightBackLowerLegId], 0, 1, 0));
+      m = mult(m, translate(0.0, -legHeight/2, 0.0));
+      m = mult(m, rotate(30, 0, 0, 1));
+      m = mult(m, translate(0.0, legHeight/2, 0.0));
+      m = mult(m, rotate(-60, 1, 0, 0));
+      m = mult(m, translate(-0.55, -2.2, 4.2));
+      */
+
       figure[rightBackLowerLegId] = createNode(m, rightBackLowerLeg, null, null);
       break;
   }
@@ -246,108 +269,155 @@ function traverse(Id) {
 }
 
 function body() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * bodyHeight, 0.0));
-  instanceMatrix = mult(instanceMatrix, scale4(bodyWidth, bodyHeight, bodyWidth));
+  instanceMatrix = mult(modelViewMatrix, scale4(bodyWidth, bodyHeight, bodyWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function head() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * headHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.8 * bodyHeight, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(headWidth, headHeight, headWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function rear() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * rearHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.2, -bodyHeight, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(rearWidth, rearHeight, rearWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function leftFrontUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.8, -1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(120, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function leftCenterUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.0, -1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(90, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function leftBackUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, -1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(60, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function rightFrontUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.8, 1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(-120, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function rightCenterUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.0, 1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(-90, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function rightBackUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, 1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(-60, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function leftFrontLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 2.2, -4.2));
+  instanceMatrix = mult(instanceMatrix, rotate(120, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function leftCenterLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 0.0, -4.55));
+  instanceMatrix = mult(instanceMatrix, rotate(90, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function leftBackLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, -4.2));
+  instanceMatrix = mult(instanceMatrix, rotate(60, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function rightFrontLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 2.2, 4.2));
+  instanceMatrix = mult(instanceMatrix, rotate(-120, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function rightCenterLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 0.0, 4.55));
+  instanceMatrix = mult(instanceMatrix, rotate(-90, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function rightBackLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * legHeight, 0.0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, 4.2));
+  instanceMatrix = mult(instanceMatrix, rotate(-60, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, legHeight/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -legHeight/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(legWidth, legHeight, legWidth));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawCylinder();
+  drawBodyPart();
 }
 
 function quad(a, b, c, d) {
@@ -366,107 +436,8 @@ function cube() {
   quad(5, 4, 0, 1);
 }
 
-var circlePoints = 0;
-
-function bottomCircle() {
-  for (var i = 0; i < circlePoints; i++) {
-    pointsArray.push(cylinderVertices[i]);
-  }
-}
-
-function tube() {
-  for (var i = 0; i < circlePoints; i++) {
-    pointsArray.push(cylinderVertices[i]);
-    pointsArray.push(cylinderVertices[circlePoints + i]);
-  }
-
-  pointsArray.push(cylinderVertices[0]);
-  pointsArray.push(cylinderVertices[circlePoints]);
-
-}
-
-function topCircle() {
-  for (var i = 0; i < circlePoints; i++) {
-    pointsArray.push(cylinderVertices[circlePoints + i]);
-  }
-}
-
-function drawCylinder() {
-  gl.drawArrays(gl.TRIANGLE_FAN, 0, circlePoints);
-  gl.drawArrays(gl.TRIANGLE_STRIP, circlePoints, 2 * circlePoints + 2);
-  gl.drawArrays(gl.TRIANGLE_FAN, 3 * circlePoints + 2, circlePoints);
-  gl.drawArrays(gl.TRIANGLE_STRIP, 4 * circlePoints + 2, capsuleRows * circlePoints);
-  gl.drawArrays(gl.TRIANGLE_STRIP, (4 + 2 * capsuleRows) * circlePoints + 2, capsuleRows * circlePoints);
-}
-
-var capsuleRows;
-
-function createCapsuleTop() {
-  var i;
-  var j;
-  capsuleRows = 0;
-  for (i = 0; i < Math.PI; i += 0.1) {
-    for (j = 0; j < 2 * Math.PI; j += 0.3) {
-      cylinderVertices.push(vec4(0.5 * Math.cos(j) * Math.cos(i), 0.5 + Math.sin(i) * 0.1, 0.5 * Math.sin(j) * Math.cos(i), 1.0));
-    }
-    capsuleRows++;
-  }
-
-  cylinderVertices.push(vec4(0, 1, 0, 1.0));
-}
-
-function createCapsuleBottom() {
-  var i;
-  var j;
-  for (i = 0; i < Math.PI; i += 0.1) {
-    for (j = 0; j < 2 * Math.PI; j += 0.3) {
-      cylinderVertices.push(vec4(0.5 * Math.cos(j) * Math.cos(i), -0.5 - Math.sin(i) * 0.1, 0.5 * Math.sin(j) * Math.cos(i), 1.0));
-    }
-  }
-
-  cylinderVertices.push(vec4(0, -1, 0, 1.0));
-}
-
-function capsulePoints() {
-  var i;
-  var j;
-  var base = 2 * circlePoints;
-  for (i = 1; i < capsuleRows; i++) {
-    for (j = 0; j < circlePoints; j++) {
-      pointsArray.push(cylinderVertices[base + i * circlePoints + j]);
-      pointsArray.push(cylinderVertices[base + j]);
-    }
-  }
-
-  for (j = 0; j < circlePoints; j++) {
-    pointsArray.push(cylinderVertices[base + j]);
-    pointsArray.push(cylinderVertices[base + capsuleRows * circlePoints]);
-  }
-
-  base = base + capsuleRows * circlePoints + 1;
-
-  for (i = 1; i < capsuleRows; i++) {
-    for (j = 0; j < circlePoints; j++) {
-      pointsArray.push(cylinderVertices[base + i * circlePoints + j]);
-      pointsArray.push(cylinderVertices[base + j]);
-    }
-  }
-
-  for (j = 0; j < circlePoints; j++) {
-    pointsArray.push(cylinderVertices[base + j]);
-    pointsArray.push(cylinderVertices[base + capsuleRows * circlePoints]);
-  }
-}
-
-function createCylinder() {
-  for (t = 0; t < 2 * Math.PI; t += 0.3) {
-    cylinderVertices.push(vec4(0.5 * Math.cos(t), -0.5, 0.5 * Math.sin(t), 1.0));
-    circlePoints++;
-  }
-
-  for (t = 0; t < 2 * Math.PI; t += 0.3) {
-    cylinderVertices.push(vec4(0.5 * Math.cos(t), 0.5, 0.5 * Math.sin(t), 1.0));
-  }
+function drawBodyPart() {
+  for(var i = 0; i < 6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4 * i, 4);
 }
 
 var timet;
@@ -497,7 +468,8 @@ window.onload = function init() {
   translateX = 0;
 
   projectionMatrix = perspective(90, 1, 0.02, 200);
-  modelViewMatrix = lookAt(vec3(0, 3, -10), vec3(0, 2, 0), vec3(0, 1, 0));
+  modelViewMatrix = lookAt(vec3(0, 4, -10), vec3(0, 1, 0), vec3(0, 1, 0));
+  //modelViewMatrix = lookAt(vec3(0, 3, -10), vec3(0, 2, 0), vec3(0, 1, 0));
 
   gl.uniformMatrix4fv(gl.getUniformLocation(program, "modelViewMatrix"), false, flatten(modelViewMatrix));
   gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
@@ -506,14 +478,7 @@ window.onload = function init() {
   projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
   timetLoc = gl.getUniformLocation(program, "timet");
 
-  //cube();
-  createCylinder();
-  createCapsuleTop();
-  createCapsuleBottom();
-  bottomCircle();
-  tube();
-  topCircle();
-  capsulePoints();
+  cube();
 
   vBuffer = gl.createBuffer();
 
