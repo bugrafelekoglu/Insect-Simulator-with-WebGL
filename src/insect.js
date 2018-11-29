@@ -55,12 +55,12 @@ const LEG_HEIGHT = 3.0;
 const LEG_WIDTH = 0.3;
 
 // Constant color values for each body part
-const BODY_COLOR = vec4(104, 36, 4, 255);
+const BODY_COLOR = vec4(129, 81, 55, 255);
 const HEAD_COLOR = vec4(100, 60, 15, 255);
 const REAR_COLOR = vec4(61, 28, 11, 255);
-const FRONT_LEG_COLOR = vec4(128, 64, 4, 255);
-const CENTER_LEG_COLOR = vec4(89, 24, 21, 255);
-const BACK_LEG_COLOR = vec4(129, 81, 55, 255);
+const FRONT_LEG_COLOR = vec4(104, 36, 4, 255);
+const CENTER_LEG_COLOR = vec4(128, 64, 4, 255);
+const BACK_LEG_COLOR = vec4(89, 24, 21, 255);
 
 var curTranslateX;
 var curTranslateY;
@@ -86,15 +86,85 @@ var interpolationFrame = 0;
 ****************************************************/
 function animationFrames() {
   thetaList = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60], //0,0,0
+    [105, 0, 0, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50],
+    [105, 0, 0, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
   ];
 
   transList = [
-    [0, 2, 0],
-    [1, 0, 0],
-    [0, 4, 0]
+    [18, 1, 0],
+    [16, 1, 0],
+    [14, 1, 0],
+    [12, 1, 0],
+    [10, 1, 0],
+    [8, 1, 0],
+    [6, 1, 0],
+    [4, 1, 0],
+    [2, 1, 0],
+    [0, 1, 0],
+    [-2, 1, 0],
+    [-4, 1, 0],
+    [-6, 1, 0],
+    [-8, 1, 0],
+    [-10, 1, 0],
+    [-12, 1, 0],
+    [-14, 1, 0],
+    [-16, 1, 0],
+    [-18, 1, 0],
+    [-18, 1, 0],
+    [-16, 1, 0],
+    [-14, 1, 0],
+    [-12, 1, 0],
+    [-10, 1, 0],
+    [-8, 1, 0],
+    [-6, 1, 0],
+    [-4, 1, 0],
+    [-2, 1, 0],
+    [0, 0, 0],
+    [2, 2, 0],
+    [4, 4, 0],
+    [6, 6, 0],
+    [8, 8, 0],
+    [10, 10, 0],
+    [12, 12, 0],
+    [14, 14, 0],
+    [16, 16, 0],
+    [18, 18, 0],
   ]
 }
 
@@ -165,7 +235,7 @@ function render() {
 
   if (isRunning) {  // Animation
     if (timet < 1) {
-      timet += 0.02;  // Speed of animation
+      timet += 0.04;  // Speed of animation
     } else {
       interpolationFrame = (interpolationFrame + 1) % thetaList.length;
       timet = 0;
@@ -599,92 +669,128 @@ function scale4(a, b, c) {
 ****************************************************/
 function sliders() {
   document.getElementById("sliderBody").oninput = function() {
-    theta[bodyId] = event.srcElement.value;    
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("bodyText").value = sliderValue;
+    theta[bodyId] = sliderValue;
     updateNodes(bodyId);
   };
 
   document.getElementById("sliderHead").oninput = function() {
-    theta[headId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("headText").value = sliderValue;
+    theta[headId] = sliderValue;
     updateNodes(headId);
   };
 
   document.getElementById("sliderRear").oninput = function() {
-    theta[rearId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("rearText").value = sliderValue;
+    theta[rearId] = sliderValue;
     updateNodes(rearId);
   };
 
   document.getElementById("sliderLFU").oninput = function() {
-    theta[leftFrontUpperLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("LFUText").value = sliderValue;
+    theta[leftFrontUpperLegId] = sliderValue;
     updateNodes(leftFrontUpperLegId);
   };
 
   document.getElementById("sliderLFL").oninput = function() {
-    theta[leftFrontLowerLegId] =  event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("LFLText").value = sliderValue;
+    theta[leftFrontLowerLegId] = sliderValue;
     updateNodes(leftFrontLowerLegId);
   };
 
   document.getElementById("sliderLCU").oninput = function() {
-    theta[leftCenterUpperLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("LCUText").value = sliderValue;
+    theta[leftCenterUpperLegId] = sliderValue;
     updateNodes(leftCenterUpperLegId);
   };
 
   document.getElementById("sliderLCL").oninput = function() {
-    theta[leftCenterLowerLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("LCLText").value = sliderValue;
+    theta[leftCenterLowerLegId] = sliderValue;
     updateNodes(leftCenterLowerLegId);
   };
 
   document.getElementById("sliderLBU").oninput = function() {
-    theta[leftBackUpperLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("LBUText").value = sliderValue;
+    theta[leftBackUpperLegId] = sliderValue;
     updateNodes(leftBackUpperLegId);
   };
 
   document.getElementById("sliderLBL").oninput = function() {
-    theta[leftBackLowerLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("LBLText").value = sliderValue;
+    theta[leftBackLowerLegId] = sliderValue;
     updateNodes(leftBackLowerLegId);
   };
 
   document.getElementById("sliderRFU").oninput = function() {
-    theta[rightFrontUpperLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("RFUText").value = sliderValue;
+    theta[rightFrontUpperLegId] = sliderValue;
     updateNodes(rightFrontUpperLegId);
   };
 
   document.getElementById("sliderRFL").oninput = function() {
-    theta[rightFrontLowerLegId] =  event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("RFLText").value = sliderValue;
+    theta[rightFrontLowerLegId] = sliderValue;
     updateNodes(rightFrontLowerLegId);
   };
 
   document.getElementById("sliderRCU").oninput = function() {
-    theta[rightCenterUpperLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("RCUText").value = sliderValue;
+    theta[rightCenterUpperLegId] = sliderValue;
     updateNodes(rightCenterUpperLegId);
   };
 
   document.getElementById("sliderRCL").oninput = function() {
-    theta[rightCenterLowerLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("RCLText").value = sliderValue;
+    theta[rightCenterLowerLegId] = sliderValue;
     updateNodes(rightCenterLowerLegId);
   };
 
   document.getElementById("sliderRBU").oninput = function() {
-    theta[rightBackUpperLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("RBUText").value = sliderValue;
+    theta[rightBackUpperLegId] = sliderValue;
     updateNodes(rightBackUpperLegId);
   };
 
   document.getElementById("sliderRBL").oninput = function() {
-    theta[rightBackLowerLegId] = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("RBLText").value = sliderValue;
+    theta[rightBackLowerLegId] = sliderValue;
     updateNodes(rightBackLowerLegId);
   };
 
   document.getElementById("sliderX").oninput = function() {
-    translateX = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("XText").value = sliderValue;
+    translateX = sliderValue;
     updateNodes(bodyId);
   };
 
   document.getElementById("sliderY").oninput = function() {
-    translateY = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("YText").value = sliderValue;
+    translateY = sliderValue;
     updateNodes(bodyId);
   };
 
   document.getElementById("sliderZ").oninput = function() {
-    translateZ = event.srcElement.value;
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("ZText").value = sliderValue;
+    translateZ = sliderValue;
     updateNodes(bodyId);
   };
 }

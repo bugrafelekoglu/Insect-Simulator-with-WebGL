@@ -68,6 +68,13 @@
   justify-content: space-around;
 }
 
+.sliderValues {
+  background: transparent;
+  border: none;
+  width: 30px;
+  color: #fff;
+}
+
 .numberDiv {
   font-size: 16px;
 }
