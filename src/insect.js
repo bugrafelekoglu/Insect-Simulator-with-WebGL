@@ -54,6 +54,14 @@ const REAR_WIDTH = 2.2;
 const LEG_HEIGHT = 3.0;
 const LEG_WIDTH = 0.3;
 
+// Constant color values for each body part
+const BODY_COLOR = vec4(104, 36, 4, 255);
+const HEAD_COLOR = vec4(100, 60, 15, 255);
+const REAR_COLOR = vec4(61, 28, 11, 255);
+const FRONT_LEG_COLOR = vec4(128, 64, 4, 255);
+const CENTER_LEG_COLOR = vec4(89, 24, 21, 255);
+const BACK_LEG_COLOR = vec4(129, 81, 55, 255);
+
 var curTranslateX;
 var curTranslateY;
 var curTranslateZ;
@@ -131,6 +139,7 @@ window.onload = function init() {
   timetLoc = gl.getUniformLocation(program, "timet");
 
   clickAddKeyframeButton();
+  clickDeleteKeyframeButton();
   clickPlayButton();
   clickAnimationButton();
   clickSaveButton();
@@ -399,21 +408,21 @@ function traverse(id) {
 function body() {
   instanceMatrix = mult(modelViewMatrix, scale4(BODY_WIDTH, BODY_HEIGHT, BODY_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(BODY_COLOR);
 }
 
 function head() {
   instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.8 * BODY_HEIGHT, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(HEAD_WIDTH, HEAD_HEIGHT, HEAD_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(HEAD_COLOR);
 }
 
 function rear() {
   instanceMatrix = mult(modelViewMatrix, translate(-0.2, -BODY_HEIGHT, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(REAR_WIDTH, REAR_HEIGHT, REAR_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(REAR_COLOR);
 }
 
 function leftFrontUpperLeg() {
@@ -424,7 +433,7 @@ function leftFrontUpperLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(FRONT_LEG_COLOR);
 }
 
 function leftCenterUpperLeg() {
@@ -435,7 +444,7 @@ function leftCenterUpperLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(CENTER_LEG_COLOR);
 }
 
 function leftBackUpperLeg() {
@@ -446,7 +455,7 @@ function leftBackUpperLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(BACK_LEG_COLOR);
 }
 
 function rightFrontUpperLeg() {
@@ -457,7 +466,7 @@ function rightFrontUpperLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(FRONT_LEG_COLOR);
 }
 
 function rightCenterUpperLeg() {
@@ -468,7 +477,7 @@ function rightCenterUpperLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(CENTER_LEG_COLOR);
 }
 
 function rightBackUpperLeg() {
@@ -479,7 +488,7 @@ function rightBackUpperLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(BACK_LEG_COLOR);
 }
 
 function leftFrontLowerLeg() {
@@ -490,7 +499,7 @@ function leftFrontLowerLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(FRONT_LEG_COLOR);
 }
 
 function leftCenterLowerLeg() {
@@ -501,7 +510,7 @@ function leftCenterLowerLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(CENTER_LEG_COLOR);
 }
 
 function leftBackLowerLeg() {
@@ -512,7 +521,7 @@ function leftBackLowerLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(BACK_LEG_COLOR);
 }
 
 function rightFrontLowerLeg() {
@@ -523,7 +532,7 @@ function rightFrontLowerLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(FRONT_LEG_COLOR);
 }
 
 function rightCenterLowerLeg() {
@@ -534,7 +543,7 @@ function rightCenterLowerLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(CENTER_LEG_COLOR);
 }
 
 function rightBackLowerLeg() {
@@ -545,14 +554,14 @@ function rightBackLowerLeg() {
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart();
+  drawBodyPart(BACK_LEG_COLOR);
 }
 
 /***************************************************
   Draws body parts of figure (with using cubes)  
 ****************************************************/
-function drawBodyPart() {
-  processBuffers(vec4(75, 65, 55, 255), vertices, 4);
+function drawBodyPart(color) {
+  processBuffers(color, vertices, 4);
   for(var i = 0; i < 6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4 * i, 4);
 }
 
@@ -685,13 +694,41 @@ function sliders() {
 ****************************************************/
 function clickAddKeyframeButton() {
   var button = document.getElementById("AddKeyframe");
+  var list = document.getElementById("KeyFrameList");
 
-  // Listener for Load button
+  // Listener for Add Keyframe button
   button.addEventListener("click", function () {
     thetaList.push(theta.slice());
     transList.push([translateX, translateY, translateZ]);
+
+    var keyframe = document.createElement("option");
+    keyframe.text = "ThetaList: " + thetaList[thetaList.length-1] +
+                   " TransList: " + transList[transList.length-1];
+    list.add(keyframe);
+
     for(i = 0; i < numNodes; i++) 
-      initNodes(i);
+      updateNodes(i);
+  });
+}
+
+/***************************************************
+  Delete Keyframe button listener
+****************************************************/
+function clickDeleteKeyframeButton() {
+  var button = document.getElementById("DeleteKeyframe");
+  var list = document.getElementById("KeyFrameList");
+
+  // Listener for Delete Keyframe button
+  button.addEventListener("click", function () {
+    var selectedIndex = list.selectedIndex;
+
+    if(selectedIndex != -1) {
+      list.remove(selectedIndex);
+      thetaList.splice(selectedIndex, 1);
+      transList.splice(selectedIndex, 1);
+    } else {
+      alert("Please first select a frame to delete it.");
+    }
   });
 }
 
@@ -701,7 +738,7 @@ function clickAddKeyframeButton() {
 function clickPlayButton() {
   var button = document.getElementById("Play");
 
-  // Listener for Load button
+  // Listener for Play button
   button.addEventListener("click", function () {
     if(thetaList.length == 0 || transList.length == 0) {
       alert("Please add a keyframe before playing frames.");
@@ -757,6 +794,7 @@ function clickSaveButton() {
 ****************************************************/
 function clickLoadButton() {
   var button = document.getElementById("Load");
+  var list = document.getElementById("KeyFrameList");
 
   // Listener for Load button
   button.addEventListener("click", function (event) {
@@ -765,6 +803,16 @@ function clickLoadButton() {
     } else {
       thetaList = loadedThetaList;
       transList = loadedTransList;
+
+      for(var i = list.options.length - 1; i >= 0; i--)
+        list.remove(i);
+      
+      for(var i = 0; i < thetaList.length; i++) {
+        var keyframe = document.createElement("option");
+        keyframe.text = "ThetaList: " + thetaList[i] +
+                       " XYZ: " + transList[i];
+        list.add(keyframe);
+      }
     }
   });
 }

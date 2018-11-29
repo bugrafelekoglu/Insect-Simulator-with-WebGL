@@ -37,6 +37,30 @@
   justify-content: space-between;
 }
 
+.select {
+  padding: 5px 8px;
+  height: 100px;
+  width: 400px;
+  border: none;
+  overflow-y: auto;
+  border-radius: 15px;
+  font-size: 12px;
+  background: #ffffff;
+  -webkit-appearance: none;
+}
+
+.select:focus {
+  outline: none;
+}
+
+.boxEnd {
+  color: white;
+  display: flex;
+  height: 32px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .partsBox {
   color: white;
   display: flex;
@@ -142,7 +166,7 @@
 
 #UIButtons {
   width: 400px;
-  height: 200px;
+  height: 300px;
   padding: 15px 20px;
   position: absolute;
   text-align: center;
@@ -197,7 +221,7 @@
 
 #FileButton {
   vertical-align: middle;
-  width: 240px;
+  width: 300px;
   text-align: center;
 }
 
@@ -227,12 +251,16 @@
   width: 150px;
 }
 
+#DeleteKeyframe {
+  width: 150px;
+}
+
 #Play {
   width: 50px;
 }
 
 #Animation {
-  width: 150px;
+  width: 120px;
   background-color: white;
   color: #f03f3f;
 }
