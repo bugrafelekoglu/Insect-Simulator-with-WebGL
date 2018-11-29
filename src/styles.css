@@ -53,12 +53,12 @@
   outline: none;
 }
 
-.boxCentered {
+.boxStart {
   color: white;
   display: flex;
   height: 32px;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
 }
 
 .partsBox {
@@ -246,6 +246,16 @@
   text-align:center;
 }
 
+#TextAnim {
+  font-size: 18px;
+  color: #fff;
+}
+
+#TextTrans {
+  font-size: 18px;
+  color: #5fb7ff;
+}
+
 #Save {
   width: 70px;
 }
@@ -267,7 +277,7 @@
 }
 
 #Animation {
-  width: 250px;
+  width: 50px;
   background-color: white;
   color: #f03f3f;
 }

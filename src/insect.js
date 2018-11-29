@@ -14,6 +14,7 @@ var canvas;
 // Global variables
 var isFileExist = false;
 var isPlaying = false;
+var isPlayingDefaultAnim = false;
 var projectionMatrix;
 var instanceMatrix;
 var modelViewMatrix;
@@ -76,6 +77,8 @@ var thetaList = [];
 var transList = [];
 var loadedThetaList = [];
 var loadedTransList = [];
+var defaultThetaList = [];
+var defaultTransList = [];
 
 var timet;
 var timetLoc;
@@ -85,7 +88,7 @@ var interpolationFrame = 0;
   Prepared animation frames
 ****************************************************/
 function animationFrames() {
-  thetaList = [
+  defaultThetaList = [
     [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
     [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
     [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
@@ -126,7 +129,7 @@ function animationFrames() {
     [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
   ];
 
-  transList = [
+  defaultTransList = [
     [18, 1, 0],
     [16, 1, 0],
     [14, 1, 0],
@@ -254,6 +257,27 @@ function render() {
     curTranslateZ = transList[curFrame][2] * (1 - timet) + transList[nextFrame][2] * timet;
     updateNodes(bodyId);
   } 
+  else if(isPlayingDefaultAnim) {
+    if (timet < 1) {
+      timet += 0.04;  // Speed of animation
+    } else {
+      interpolationFrame = (interpolationFrame + 1) % defaultThetaList.length;
+      timet = 0;
+    }
+
+    var curFrame = interpolationFrame;
+    var nextFrame = (interpolationFrame + 1) % defaultThetaList.length;
+
+    for (var i = 0; i < theta.length; i++) {
+      curTheta[i] = defaultThetaList[curFrame][i] * (1 - timet) + defaultThetaList[nextFrame][i] * timet;
+      updateNodes(i);
+    }
+
+    curTranslateX = defaultTransList[curFrame][0] * (1 - timet) + defaultTransList[nextFrame][0] * timet;
+    curTranslateY = defaultTransList[curFrame][1] * (1 - timet) + defaultTransList[nextFrame][1] * timet;
+    curTranslateZ = defaultTransList[curFrame][2] * (1 - timet) + defaultTransList[nextFrame][2] * timet;
+    updateNodes(bodyId);
+  }
   else {  // Static picture
     for (var i = 0; i < theta.length; i++) {
       curTheta[i] = theta[i];
@@ -850,17 +874,21 @@ function clickPlayButton() {
 
   // Listener for Play button
   button.addEventListener("click", function () {
-    if(thetaList.length == 0 || transList.length == 0) {
-      alert("Please add a keyframe before playing frames.");
+    if(isPlayingDefaultAnim) {
+      alert("Default animation is playing, please stop that first.");
     } else {
-      isPlaying = !isPlaying;
-      interpolationFrame = 0;
-      timet = 0;
-
-      if(isPlaying)
-        button.innerText = "❚❚";
-      else
-        button.innerText = "►";
+      if(thetaList.length == 0 || transList.length == 0) {
+        alert("Please add a keyframe before playing frames.");
+      } else {
+        isPlaying = !isPlaying;
+        interpolationFrame = 0;
+        timet = 0;
+  
+        if(isPlaying)
+          button.innerText = "❚❚";
+        else
+          button.innerText = "►";
+      }
     }
   });
 }
@@ -873,15 +901,19 @@ function clickAnimationButton() {
 
   // Listener for Animation button
   button.addEventListener("click", function () {
-    animationFrames();
-    isPlaying = !isPlaying;
-    interpolationFrame = 0;
-    timet = 0;
+    if(isPlaying) {
+      alert("Custom animation is playing, please stop that first.");
+    } else {
+      animationFrames();
+      isPlayingDefaultAnim = !isPlayingDefaultAnim;
+      interpolationFrame = 0;
+      timet = 0;
 
-    if(isPlaying)
-        button.innerText = "Stop Default Animation";
+      if(isPlayingDefaultAnim)
+        button.innerText = "❚❚";
       else
-        button.innerText = "Play Default Animation";
+        button.innerText = "►";
+    }
   });
 }
 
