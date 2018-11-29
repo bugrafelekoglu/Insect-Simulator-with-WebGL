@@ -809,7 +809,7 @@ function clickAddKeyframeButton() {
 
     var keyframe = document.createElement("option");
     keyframe.text = "ThetaList: " + thetaList[thetaList.length-1] +
-                   " TransList: " + transList[transList.length-1];
+                   " XYZ: " + transList[transList.length-1];
     list.add(keyframe);
 
     for(i = 0; i < numNodes; i++) 

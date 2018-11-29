@@ -39,7 +39,7 @@
 
 .select {
   padding: 5px 8px;
-  height: 100px;
+  height: 200px;
   width: 400px;
   border: none;
   overflow-y: auto;
@@ -173,7 +173,7 @@
 
 #UIButtons {
   width: 400px;
-  height: 300px;
+  height: 400px;
   padding: 15px 20px;
   position: absolute;
   text-align: center;
