@@ -877,6 +877,11 @@ function clickAnimationButton() {
     isPlaying = !isPlaying;
     interpolationFrame = 0;
     timet = 0;
+
+    if(isPlaying)
+        button.innerText = "Stop Default Animation";
+      else
+        button.innerText = "Play Default Animation";
   });
 }
 

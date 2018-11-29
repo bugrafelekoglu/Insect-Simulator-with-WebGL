@@ -267,7 +267,7 @@
 }
 
 #Animation {
-  width: 200px;
+  width: 250px;
   background-color: white;
   color: #f03f3f;
 }
@@ -283,6 +283,6 @@
 }
 
 canvas {
-  border: 22px #222222;
+  border: 22px #B5651D;
   border-style: groove;
 }
