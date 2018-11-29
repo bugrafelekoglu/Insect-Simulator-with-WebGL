@@ -53,12 +53,12 @@
   outline: none;
 }
 
-.boxEnd {
+.boxCentered {
   color: white;
   display: flex;
   height: 32px;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .partsBox {
@@ -267,7 +267,7 @@
 }
 
 #Animation {
-  width: 120px;
+  width: 200px;
   background-color: white;
   color: #f03f3f;
 }

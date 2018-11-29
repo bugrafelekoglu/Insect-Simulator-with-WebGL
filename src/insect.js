@@ -13,7 +13,7 @@ var canvas;
 
 // Global variables
 var isFileExist = false;
-var isRunning = false;
+var isPlaying = false;
 var projectionMatrix;
 var instanceMatrix;
 var modelViewMatrix;
@@ -233,7 +233,7 @@ function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   drawGround();
 
-  if (isRunning) {  // Animation
+  if (isPlaying) {  // Animation
     if (timet < 1) {
       timet += 0.04;  // Speed of animation
     } else {
@@ -829,9 +829,13 @@ function clickDeleteKeyframeButton() {
     var selectedIndex = list.selectedIndex;
 
     if(selectedIndex != -1) {
-      list.remove(selectedIndex);
-      thetaList.splice(selectedIndex, 1);
-      transList.splice(selectedIndex, 1);
+      if(isPlaying) {
+        alert("Cannot delete a frame while playing. Please stop animation first.");
+      } else {
+        list.remove(selectedIndex);
+        thetaList.splice(selectedIndex, 1);
+        transList.splice(selectedIndex, 1);
+      }
     } else {
       alert("Please first select a frame to delete it.");
     }
@@ -849,9 +853,14 @@ function clickPlayButton() {
     if(thetaList.length == 0 || transList.length == 0) {
       alert("Please add a keyframe before playing frames.");
     } else {
-      isRunning = !isRunning;
+      isPlaying = !isPlaying;
       interpolationFrame = 0;
       timet = 0;
+
+      if(isPlaying)
+        button.innerText = "❚❚";
+      else
+        button.innerText = "►";
     }
   });
 }
@@ -865,7 +874,7 @@ function clickAnimationButton() {
   // Listener for Animation button
   button.addEventListener("click", function () {
     animationFrames();
-    isRunning = !isRunning;
+    isPlaying = !isPlaying;
     interpolationFrame = 0;
     timet = 0;
   });
