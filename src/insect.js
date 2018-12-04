@@ -31,19 +31,23 @@ var headId = 1;
 var rearId = 2;
 var leftFrontUpperLegId = 3;
 var leftFrontLowerLegId = 4;
-var leftCenterUpperLegId = 5;
-var leftCenterLowerLegId = 6;
-var leftBackUpperLegId = 7;
-var leftBackLowerLegId = 8;
-var rightFrontUpperLegId = 9;
-var rightFrontLowerLegId = 10;
-var rightCenterUpperLegId = 11;
-var rightCenterLowerLegId = 12;
-var rightBackUpperLegId = 13;
-var rightBackLowerLegId = 14;
+var leftFrontCenterUpperLegId = 5;
+var leftFrontCenterLowerLegId = 6;
+var leftBackCenterUpperLegId = 7;
+var leftBackCenterLowerLegId = 8;
+var leftBackUpperLegId = 9;
+var leftBackLowerLegId = 10;
+var rightFrontUpperLegId = 11;
+var rightFrontLowerLegId = 12;
+var rightFrontCenterUpperLegId = 13;
+var rightFrontCenterLowerLegId = 14;
+var rightBackCenterUpperLegId = 15;
+var rightBackCenterLowerLegId = 16;
+var rightBackUpperLegId = 17;
+var rightBackLowerLegId = 18;
 
 // Numver of total body parts (nodes)
-var numNodes = 15; 
+var numNodes = 19; 
 
 // Constant height and width values of nodes
 const BODY_HEIGHT = 1.6;
@@ -56,22 +60,23 @@ const LEG_HEIGHT = 3.0;
 const LEG_WIDTH = 0.3;
 
 // Constant color values for each body part
-const BODY_COLOR = vec4(129, 81, 55, 255);
+const BODY_COLOR = vec4(120, 75, 25, 255);
 const HEAD_COLOR = vec4(100, 60, 15, 255);
 const REAR_COLOR = vec4(61, 28, 11, 255);
 const FRONT_LEG_COLOR = vec4(104, 36, 4, 255);
-const CENTER_LEG_COLOR = vec4(128, 64, 4, 255);
+const FRONT_CENTER_LEG_COLOR = vec4(128, 64, 4, 255);
+const BACK_CENTER_LEG_COLOR = vec4(181, 101, 29, 255);
 const BACK_LEG_COLOR = vec4(89, 24, 21, 255);
 
 var curTranslateX;
 var curTranslateY;
 var curTranslateZ;
-var curTheta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var curTheta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var translateX;
 var translateY;
 var translateZ;
-var theta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var theta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var thetaList = [];
 var transList = [];
@@ -89,44 +94,44 @@ var interpolationFrame = 0;
 ****************************************************/
 function animationFrames() {
   defaultThetaList = [
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
-    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
-    [105, 0, 0, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60], //0,0,0
-    [105, 0, 0, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50],
-    [105, 0, 0, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
-    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [-75, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [-75, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30],
+    [105, 0, 0, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60, 0, -30, 30, -60],
+    [105, 0, 0, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60, 30, -60], //0,0,0
+    [105, 0, 0, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50, 0, -50],
+    [105, 0, 0, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30, -30],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
+    [105, 0, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0, -60, 0],
   ];
 
   defaultTransList = [
@@ -342,134 +347,178 @@ function updateNodes(id) {
       break;
 
     case leftFrontUpperLegId:
-      m = translate(0.0, 0.8, -1.8);
-      m = mult(m, rotate(120, 1, 0, 0));
+      m = translate(0.0, 1.2, -1.8);
+      m = mult(m, rotate(135, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftFrontUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-120, 1, 0, 0));
-      m = mult(m, translate(0.0, -0.8, 1.8));
-      figure[leftFrontUpperLegId] = createNode(m, leftFrontUpperLeg, leftCenterUpperLegId, leftFrontLowerLegId);
+      m = mult(m, rotate(-135, 1, 0, 0));
+      m = mult(m, translate(0.0, -1.2, 1.8));
+      figure[leftFrontUpperLegId] = createNode(m, leftFrontUpperLeg, leftFrontCenterUpperLegId, leftFrontLowerLegId);
       break;
 
-    case leftCenterUpperLegId:
-      m = translate(0.0, 0.0, -1.8);
-      m = mult(m, rotate(90, 1, 0, 0));
+    case leftFrontCenterUpperLegId:
+      m = translate(0.0, 0.4, -1.8);
+      m = mult(m, rotate(105, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-curTheta[leftCenterUpperLegId], 0, 0, 1));
+      m = mult(m, rotate(-curTheta[leftFrontCenterUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-90, 1, 0, 0));
-      m = mult(m, translate(0.0, 0.0, 1.8));
-      figure[leftCenterUpperLegId] = createNode(m, leftCenterUpperLeg, leftBackUpperLegId, leftCenterLowerLegId);
+      m = mult(m, rotate(-105, 1, 0, 0));
+      m = mult(m, translate(0.0, -0.4, 1.8));
+      figure[leftFrontCenterUpperLegId] = createNode(m, leftFrontCenterUpperLeg, leftBackCenterUpperLegId, leftFrontCenterLowerLegId);
+      break;
+
+    case leftBackCenterUpperLegId:
+      m = translate(0.0, -0.4, -1.8);
+      m = mult(m, rotate(75, 1, 0, 0));
+      m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-curTheta[leftBackCenterUpperLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-75, 1, 0, 0));
+      m = mult(m, translate(0.0, 0.4, 1.8));
+      figure[leftBackCenterUpperLegId] = createNode(m, leftBackCenterUpperLeg, leftBackUpperLegId, leftBackCenterLowerLegId);
       break;
 
     case leftBackUpperLegId:
-      m = translate(0.0, -0.8, -1.8);
-      m = mult(m, rotate(60, 1, 0, 0));
+      m = translate(0.0, -1.2, -1.8);
+      m = mult(m, rotate(45, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftBackUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-60, 1, 0, 0));
-      m = mult(m, translate(0.0, 0.8, 1.8));
+      m = mult(m, rotate(-45, 1, 0, 0));
+      m = mult(m, translate(0.0, 1.2, 1.8));
       figure[leftBackUpperLegId] = createNode(m, leftBackUpperLeg, rightFrontUpperLegId, leftBackLowerLegId);
       break;
 
     case rightFrontUpperLegId:
-      m = translate(0.0, 0.8, 1.8);
-      m = mult(m, rotate(-120, 1, 0, 0));
+      m = translate(0.0, 1.2, 1.8);
+      m = mult(m, rotate(-135, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightFrontUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(120, 1, 0, 0));
-      m = mult(m, translate(0.0, -0.8, -1.8));
-      figure[rightFrontUpperLegId] = createNode(m, rightFrontUpperLeg, rightCenterUpperLegId, rightFrontLowerLegId);
+      m = mult(m, rotate(135, 1, 0, 0));
+      m = mult(m, translate(0.0, -1.2, -1.8));
+      figure[rightFrontUpperLegId] = createNode(m, rightFrontUpperLeg, rightFrontCenterUpperLegId, rightFrontLowerLegId);
       break;
 
-    case rightCenterUpperLegId:
-      m = translate(0.0, 0.0, 1.8);
-      m = mult(m, rotate(-90, 1, 0, 0));
+    case rightFrontCenterUpperLegId:
+      m = translate(0.0, 0.4, 1.8);
+      m = mult(m, rotate(-105, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-curTheta[rightCenterUpperLegId], 0, 0, 1));
+      m = mult(m, rotate(-curTheta[rightFrontCenterUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(90, 1, 0, 0));
-      m = mult(m, translate(0.0, 0.0, -1.8));
-      figure[rightCenterUpperLegId] = createNode(m, rightCenterUpperLeg, rightBackUpperLegId, rightCenterLowerLegId);
+      m = mult(m, rotate(105, 1, 0, 0));
+      m = mult(m, translate(0.0, -0.4, -1.8));
+      figure[rightFrontCenterUpperLegId] = createNode(m, rightFrontCenterUpperLeg, rightBackCenterUpperLegId, rightFrontCenterLowerLegId);
+      break;
+
+    case rightBackCenterUpperLegId:
+      m = translate(0.0, -0.4, 1.8);
+      m = mult(m, rotate(-75, 1, 0, 0));
+      m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-curTheta[rightBackCenterUpperLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(75, 1, 0, 0));
+      m = mult(m, translate(0.0, 0.4, -1.8));
+      figure[rightBackCenterUpperLegId] = createNode(m, rightBackCenterUpperLeg, rightBackUpperLegId, rightBackCenterLowerLegId);
       break;
 
     case rightBackUpperLegId:
-      m = translate(0.0, -0.8, 1.8);
-      m = mult(m, rotate(-60, 1, 0, 0));
+      m = translate(0.0, -1.2, 1.8);
+      m = mult(m, rotate(-45, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightBackUpperLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(60, 1, 0, 0));
-      m = mult(m, translate(0.0, 0.8, -1.8));
+      m = mult(m, rotate(45, 1, 0, 0));
+      m = mult(m, translate(0.0, 1.2, -1.8));
       figure[rightBackUpperLegId] = createNode(m, rightBackUpperLeg, null, rightBackLowerLegId);
       break;
 
     case leftFrontLowerLegId:
-      m = translate(-0.55, 2.2, -4.2);
-      m = mult(m, rotate(120, 1, 0, 0));
+      m = translate(-0.55, 3.2, -3.75);
+      m = mult(m, rotate(135, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftFrontLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-120, 1, 0, 0));
-      m = mult(m, translate(0.55, -2.2, 4.2));
+      m = mult(m, rotate(-135, 1, 0, 0));
+      m = mult(m, translate(0.55, -3.2, 3.75));
       figure[leftFrontLowerLegId] = createNode(m, leftFrontLowerLeg, null, null);
       break;
 
-    case leftCenterLowerLegId:
-      m = translate(-0.55, 0.0, -4.55);
-      m = mult(m, rotate(90, 1, 0, 0));
+    case leftFrontCenterLowerLegId:
+      m = translate(-0.55, 1.1, -4.55);
+      m = mult(m, rotate(105, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-curTheta[leftCenterLowerLegId], 0, 0, 1));
+      m = mult(m, rotate(-curTheta[leftFrontCenterLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-90, 1, 0, 0));
-      m = mult(m, translate(0.55, 0.0, 4.55));
-      figure[leftCenterLowerLegId] = createNode(m, leftCenterLowerLeg, null, null);
+      m = mult(m, rotate(-105, 1, 0, 0));
+      m = mult(m, translate(0.55, -1.1, 4.55));
+      figure[leftFrontCenterLowerLegId] = createNode(m, leftFrontCenterLowerLeg, null, null);
+      break;
+
+    case leftBackCenterLowerLegId:
+      m = translate(-0.55, -1.1, -4.55);
+      m = mult(m, rotate(75, 1, 0, 0));
+      m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-curTheta[leftBackCenterLowerLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-75, 1, 0, 0));
+      m = mult(m, translate(0.55, 1.1, 4.55));
+      figure[leftBackCenterLowerLegId] = createNode(m, leftBackCenterLowerLeg, null, null);
       break;
 
     case leftBackLowerLegId:
-      m = translate(-0.55, -2.2, -4.2);
-      m = mult(m, rotate(60, 1, 0, 0));
+      m = translate(-0.55, -3.2, -3.75);
+      m = mult(m, rotate(45, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[leftBackLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-60, 1, 0, 0));
-      m = mult(m, translate(0.55, 2.2, 4.2));
+      m = mult(m, rotate(-45, 1, 0, 0));
+      m = mult(m, translate(0.55, 3.2, 3.75));
       figure[leftBackLowerLegId] = createNode(m, leftBackLowerLeg, null, null);
       break;
 
     case rightFrontLowerLegId:
-      m = translate(-0.55, 2.2, 4.2);
-      m = mult(m, rotate(-120, 1, 0, 0));
+      m = translate(-0.55, 3.2, 3.75);
+      m = mult(m, rotate(-135, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightFrontLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(120, 1, 0, 0));
-      m = mult(m, translate(0.55, -2.2, -4.2));
+      m = mult(m, rotate(135, 1, 0, 0));
+      m = mult(m, translate(0.55, -3.2, -3.75));
       figure[rightFrontLowerLegId] = createNode(m, rightFrontLowerLeg, null, null);
       break;
 
-    case rightCenterLowerLegId:
-      m = translate(-0.55, 0.0, 4.55);
-      m = mult(m, rotate(-90, 1, 0, 0));
+    case rightFrontCenterLowerLegId:
+      m = translate(-0.55, 1.1, 4.55);
+      m = mult(m, rotate(-105, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(-curTheta[rightCenterLowerLegId], 0, 0, 1));
+      m = mult(m, rotate(-curTheta[rightFrontCenterLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(90, 1, 0, 0));
-      m = mult(m, translate(0.55, 0.0, -4.55));
-      figure[rightCenterLowerLegId] = createNode(m, rightCenterLowerLeg, null, null);
+      m = mult(m, rotate(105, 1, 0, 0));
+      m = mult(m, translate(0.55, -1.1, -4.55));
+      figure[rightFrontCenterLowerLegId] = createNode(m, rightFrontCenterLowerLeg, null, null);
+      break;
+
+    case rightBackCenterLowerLegId:
+      m = translate(-0.55, -1.1, 4.55);
+      m = mult(m, rotate(-75, 1, 0, 0));
+      m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(-curTheta[rightBackCenterLowerLegId], 0, 0, 1));
+      m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
+      m = mult(m, rotate(75, 1, 0, 0));
+      m = mult(m, translate(0.55, 1.1, -4.55));
+      figure[rightBackCenterLowerLegId] = createNode(m, rightBackCenterLowerLeg, null, null);
       break;
 
     case rightBackLowerLegId:
-      m = translate(-0.55, -2.2, 4.2);
-      m = mult(m, rotate(-60, 1, 0, 0));
+      m = translate(-0.55, -3.2, 3.75);
+      m = mult(m, rotate(-45, 1, 0, 0));
       m = mult(m, translate(0.0, LEG_HEIGHT/2, 0.0));
       m = mult(m, rotate(-curTheta[rightBackLowerLegId], 0, 0, 1));
       m = mult(m, translate(0.0, -LEG_HEIGHT/2, 0.0));
-      m = mult(m, rotate(60, 1, 0, 0));
-      m = mult(m, translate(0.55, 2.2, -4.2));
+      m = mult(m, rotate(45, 1, 0, 0));
+      m = mult(m, translate(0.55, 3.2, -3.75));
       figure[rightBackLowerLegId] = createNode(m, rightBackLowerLeg, null, null);
       break;
   }
@@ -520,8 +569,8 @@ function rear() {
 }
 
 function leftFrontUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.8, -1.8));
-  instanceMatrix = mult(instanceMatrix, rotate(120, 1, 0, 0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 1.2, -1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(135, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -530,20 +579,31 @@ function leftFrontUpperLeg() {
   drawBodyPart(FRONT_LEG_COLOR);
 }
 
-function leftCenterUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.0, -1.8));
-  instanceMatrix = mult(instanceMatrix, rotate(90, 1, 0, 0));
+function leftFrontCenterUpperLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.4, -1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(105, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart(CENTER_LEG_COLOR);
+  drawBodyPart(FRONT_CENTER_LEG_COLOR);
+}
+
+function leftBackCenterUpperLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.4, -1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(75, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+  drawBodyPart(BACK_CENTER_LEG_COLOR);
 }
 
 function leftBackUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, -1.8));
-  instanceMatrix = mult(instanceMatrix, rotate(60, 1, 0, 0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -1.2, -1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(45, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -553,8 +613,8 @@ function leftBackUpperLeg() {
 }
 
 function rightFrontUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.8, 1.8));
-  instanceMatrix = mult(instanceMatrix, rotate(-120, 1, 0, 0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 1.2, 1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(-135, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -563,20 +623,31 @@ function rightFrontUpperLeg() {
   drawBodyPart(FRONT_LEG_COLOR);
 }
 
-function rightCenterUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.0, 1.8));
-  instanceMatrix = mult(instanceMatrix, rotate(-90, 1, 0, 0));
+function rightFrontCenterUpperLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.4, 1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(-105, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart(CENTER_LEG_COLOR);
+  drawBodyPart(FRONT_CENTER_LEG_COLOR);
+}
+
+function rightBackCenterUpperLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.4, 1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(-75, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+  drawBodyPart(BACK_CENTER_LEG_COLOR);
 }
 
 function rightBackUpperLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(0.0, -0.8, 1.8));
-  instanceMatrix = mult(instanceMatrix, rotate(-60, 1, 0, 0));
+  instanceMatrix = mult(modelViewMatrix, translate(0.0, -1.2, 1.8));
+  instanceMatrix = mult(instanceMatrix, rotate(-45, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(-10, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -586,8 +657,8 @@ function rightBackUpperLeg() {
 }
 
 function leftFrontLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 2.2, -4.2));
-  instanceMatrix = mult(instanceMatrix, rotate(120, 1, 0, 0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 3.2, -3.75));
+  instanceMatrix = mult(instanceMatrix, rotate(135, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -596,20 +667,31 @@ function leftFrontLowerLeg() {
   drawBodyPart(FRONT_LEG_COLOR);
 }
 
-function leftCenterLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 0.0, -4.55));
-  instanceMatrix = mult(instanceMatrix, rotate(90, 1, 0, 0));
+function leftFrontCenterLowerLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 1.1, -4.55));
+  instanceMatrix = mult(instanceMatrix, rotate(105, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart(CENTER_LEG_COLOR);
+  drawBodyPart(FRONT_CENTER_LEG_COLOR);
+}
+
+function leftBackCenterLowerLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -1.1, -4.55));
+  instanceMatrix = mult(instanceMatrix, rotate(75, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+  drawBodyPart(BACK_CENTER_LEG_COLOR);
 }
 
 function leftBackLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, -4.2));
-  instanceMatrix = mult(instanceMatrix, rotate(60, 1, 0, 0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -3.2, -3.75));
+  instanceMatrix = mult(instanceMatrix, rotate(45, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -619,8 +701,8 @@ function leftBackLowerLeg() {
 }
 
 function rightFrontLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 2.2, 4.2));
-  instanceMatrix = mult(instanceMatrix, rotate(-120, 1, 0, 0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 3.2, 3.75));
+  instanceMatrix = mult(instanceMatrix, rotate(-135, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -629,20 +711,31 @@ function rightFrontLowerLeg() {
   drawBodyPart(FRONT_LEG_COLOR);
 }
 
-function rightCenterLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 0.0, 4.55));
-  instanceMatrix = mult(instanceMatrix, rotate(-90, 1, 0, 0));
+function rightFrontCenterLowerLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, 1.1, 4.55));
+  instanceMatrix = mult(instanceMatrix, rotate(-105, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
-  drawBodyPart(CENTER_LEG_COLOR);
+  drawBodyPart(FRONT_CENTER_LEG_COLOR);
+}
+
+function rightBackCenterLowerLeg() {
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -1.1, 4.55));
+  instanceMatrix = mult(instanceMatrix, rotate(-75, 1, 0, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
+  instanceMatrix = mult(instanceMatrix, scale4(LEG_WIDTH, LEG_HEIGHT, LEG_WIDTH));
+  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix));
+  drawBodyPart(BACK_CENTER_LEG_COLOR);
 }
 
 function rightBackLowerLeg() {
-  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -2.2, 4.2));
-  instanceMatrix = mult(instanceMatrix, rotate(-60, 1, 0, 0));
+  instanceMatrix = mult(modelViewMatrix, translate(-0.55, -3.2, 3.75));
+  instanceMatrix = mult(instanceMatrix, rotate(-45, 1, 0, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.0, LEG_HEIGHT/2, 0.0));
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.0, -LEG_HEIGHT/2, 0.0));
@@ -727,18 +820,32 @@ function sliders() {
     updateNodes(leftFrontLowerLegId);
   };
 
-  document.getElementById("sliderLCU").oninput = function() {
+  document.getElementById("sliderLFCU").oninput = function() {
     var sliderValue = event.srcElement.value; 
-    document.getElementById("LCUText").value = sliderValue;
-    theta[leftCenterUpperLegId] = sliderValue;
-    updateNodes(leftCenterUpperLegId);
+    document.getElementById("LFCUText").value = sliderValue;
+    theta[leftFrontCenterUpperLegId] = sliderValue;
+    updateNodes(leftFrontCenterUpperLegId);
   };
 
-  document.getElementById("sliderLCL").oninput = function() {
+  document.getElementById("sliderLFCL").oninput = function() {
     var sliderValue = event.srcElement.value; 
-    document.getElementById("LCLText").value = sliderValue;
-    theta[leftCenterLowerLegId] = sliderValue;
-    updateNodes(leftCenterLowerLegId);
+    document.getElementById("LFCLText").value = sliderValue;
+    theta[leftFrontCenterLowerLegId] = sliderValue;
+    updateNodes(leftFrontCenterLowerLegId);
+  };
+
+  document.getElementById("sliderLBCU").oninput = function() {
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("LBCUText").value = sliderValue;
+    theta[leftBackCenterUpperLegId] = sliderValue;
+    updateNodes(leftBackCenterUpperLegId);
+  };
+
+  document.getElementById("sliderLBCL").oninput = function() {
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("LBCLText").value = sliderValue;
+    theta[leftBackCenterLowerLegId] = sliderValue;
+    updateNodes(leftBackCenterLowerLegId);
   };
 
   document.getElementById("sliderLBU").oninput = function() {
@@ -769,18 +876,32 @@ function sliders() {
     updateNodes(rightFrontLowerLegId);
   };
 
-  document.getElementById("sliderRCU").oninput = function() {
+  document.getElementById("sliderRFCU").oninput = function() {
     var sliderValue = event.srcElement.value; 
-    document.getElementById("RCUText").value = sliderValue;
-    theta[rightCenterUpperLegId] = sliderValue;
-    updateNodes(rightCenterUpperLegId);
+    document.getElementById("RFCUText").value = sliderValue;
+    theta[rightFrontCenterUpperLegId] = sliderValue;
+    updateNodes(rightFrontCenterUpperLegId);
   };
 
-  document.getElementById("sliderRCL").oninput = function() {
+  document.getElementById("sliderRFCL").oninput = function() {
     var sliderValue = event.srcElement.value; 
-    document.getElementById("RCLText").value = sliderValue;
-    theta[rightCenterLowerLegId] = sliderValue;
-    updateNodes(rightCenterLowerLegId);
+    document.getElementById("RFCLText").value = sliderValue;
+    theta[rightFrontCenterLowerLegId] = sliderValue;
+    updateNodes(rightFrontCenterLowerLegId);
+  };
+  
+  document.getElementById("sliderRBCU").oninput = function() {
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("RBCUText").value = sliderValue;
+    theta[rightBackCenterUpperLegId] = sliderValue;
+    updateNodes(rightBackCenterUpperLegId);
+  };
+
+  document.getElementById("sliderRBCL").oninput = function() {
+    var sliderValue = event.srcElement.value; 
+    document.getElementById("RBCLText").value = sliderValue;
+    theta[rightBackCenterLowerLegId] = sliderValue;
+    updateNodes(rightBackCenterLowerLegId);
   };
 
   document.getElementById("sliderRBU").oninput = function() {
